@@ -17,17 +17,19 @@
 #   - Python 3 with: pip install xmltodict requests
 #
 # USAGE
-#   cd <project root: metabolicCartography>
-#   bash escher/convert_all_to_escher.sh
+#   bash code/EscherConverter/sbml2escher/convert_all_to_escher.sh
+#   (runs from anywhere; input paths are resolved against the metabolicCartography
+#    project root, which is three levels above this script.)
 #
-# Outputs land in escher/json/ . Large maps (whole ReconMap, ReconMap 2.0) can take
-# several minutes each on the MINERVA service.
+# Outputs land in this script's json/ folder. Large maps (whole ReconMap, ReconMap 2.0)
+# can take several minutes each on the MINERVA service.
 
 set -u
 
-# Resolve project root = parent of this script's directory
+# Resolve the metabolicCartography project root: three levels up from this script
+# (sbml2escher -> EscherConverter -> code -> metabolicCartography).
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
+ROOT="$(cd "$SCRIPT_DIR/../../.." && pwd)"
 OUT="$SCRIPT_DIR/json"
 TMP="$SCRIPT_DIR/.tmp_inputs"
 mkdir -p "$OUT" "$TMP"
@@ -38,7 +40,7 @@ CONVERT="$SCRIPT_DIR/sbml2escher.py"
 maps=(
   "reconMap3_whole|results/2017_ReconMap/maps/FullMap/mergeNewReconMap/WholeMap/20170901_reconMap/Final_map/reconMap2_allin_FBA.xml"
   "organelle_mitochondrion|results/2017_ReconMap/maps/FullMap/Organelles_2017/organellesFinal/mito_R.xml"
-  "organelle_endoplasmic_reticulum|results/2017_ReconMap/maps/FullMap/Organelles_2017/organellesFinal/ret_R.xml"
+  "organelle_endoplasmic_reticulum|results/2017_ReconMap/maps/FullMap/Organelles_2017/organellesXml/20170809_ReticulumFinal.xml"
   "organelle_peroxisome|results/2017_ReconMap/maps/FullMap/Organelles_2017/organellesFinal/perox_R.xml"
   "organelle_lysosome|results/2017_ReconMap/maps/FullMap/Organelles_2017/organellesFinal/lysosome_R.xml"
   "organelle_golgi|results/2017_ReconMap/maps/FullMap/Organelles_2017/organellesFinal/golgi_R.xml"

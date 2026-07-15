@@ -1,6 +1,6 @@
 # Escher conversion of the metabolic maps
 
-Converts each mature map in [`../MAPS.md`](../MAPS.md) from CellDesigner XML to
+Converts each mature map in [`MAPS.md`](../../../MAPS.md) from CellDesigner XML to
 [Escher](https://escher.github.io) JSON, following the official method in
 <https://escher.readthedocs.io/en/stable/escherconverter.html> (§8.2, *CellDesigner conversion*).
 
@@ -8,7 +8,9 @@ Converts each mature map in [`../MAPS.md`](../MAPS.md) from CellDesigner XML to
 
 - `sbml2escher.py` — the official Escher conversion script (from `opencobra/escher`).
 - `convert_all_to_escher.sh` — batch runner that converts all 12 maps in one command.
-- `json/` — output folder (created on first run).
+- `json/` — Escher JSON outputs, one per map.
+- `xml/` — archived copies of the CellDesigner source `.xml`, each renamed to match its output.
+- `sbgn/` — SBGN-ML export of the MitoMap signalling map.
 
 ## How it works
 
@@ -24,11 +26,11 @@ must be run on your own machine.
 # 1. install the two Python dependencies
 pip install xmltodict requests
 
-# 2. from the project root (the folder containing MAPS.md):
-bash escher/convert_all_to_escher.sh
+# 2. run the batch converter (input paths resolve to the project root automatically):
+bash code/EscherConverter/sbml2escher/convert_all_to_escher.sh
 ```
 
-Outputs are written to `escher/json/<name>.json`, one per map:
+Outputs are written to `json/<name>.json` next to this script, one per map:
 
 | Output | Source map |
 |--------|------------|
@@ -51,6 +53,8 @@ Outputs are written to `escher/json/<name>.json`, one per map:
   filenames — relevant to `NN main map 3.6- final map.xml`).
 - Large maps (`reconMap3_whole`, `reconMap2_recon2`) can take several minutes each on the
   MINERVA service; the script's HTTP timeout is 10 minutes per file.
+- The endoplasmic reticulum uses `organellesXml/20170809_ReticulumFinal.xml`; the
+  `organellesFinal/ret_R.xml` and `ret.xml` files are rejected by MINERVA (HTTP 400).
 - To convert a single map manually:
-  `python3 escher/sbml2escher.py --input=path/to/map.xml --output=escher/json/map.json`
+  `python3 sbml2escher.py --input=path/to/map.xml --output=map.json`
 - Load a resulting `.json` in the Escher builder at <https://escher.github.io> (Map → Load map JSON).
